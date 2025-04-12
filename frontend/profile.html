@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Profile Stats</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="url"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .stats-container {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+            color: #7f8c8d;
+        }
+
+        .loading::after {
+            content: "...";
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Add Your Coding Profiles</h1>
+        <form id="profileForm">
+            <div class="form-group">
+                <label for="leetcode">LeetCode Profile URL</label>
+                <input type="url" id="leetcode" name="leetcode" placeholder="https://leetcode.com/username">
+            </div>
+            <div class="form-group">
+                <label for="codechef">CodeChef Profile URL</label>
+                <input type="url" id="codechef" name="codechef" placeholder="https://www.codechef.com/users/username">
+            </div>
+            <div class="form-group">
+                <label for="codeforces">CodeForces Profile URL</label>
+                <input type="url" id="codeforces" name="codeforces" placeholder="https://codeforces.com/profile/username">
+            </div>
+            <button type="submit">Submit Profiles</button>
+        </form>
+        <div id="loadingMessage" class="loading">Fetching your stats</div>
+        <div id="successMessage" class="message success-message">Profiles added successfully!</div>
+        <div id="errorMessage" class="message error-message">Error adding profiles. Please try again.</div>
+    </div>
+
+    <!-- Stats Container -->
+    <div id="statsContainer" class="stats-container">
+        <!-- Content from index.html will be loaded here -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const statsContainer = document.getElementById('statsContainer');
+            
+            // Hide messages and show loading
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            loadingMessage.style.display = 'block';
+            statsContainer.style.display = 'none';
+
+            const formData = {
+                leetcode_url: document.getElementById('leetcode').value,
+                codechef_url: document.getElementById('codechef').value,
+                codeforces_url: document.getElementById('codeforces').value
+            };
+
+            try {
+                // Submit profile URLs
+                const response = await fetch('http://localhost:8000/track-profiles', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to add profiles');
+                }
+
+                // Show success message
+                successMessage.style.display = 'block';
+
+                // Wait a moment for the backend to process
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Fetch stats
+                const statsResponse = await fetch(`${API_URL}/user/1/stats`);
+                if (!statsResponse.ok) {
+                    throw new Error('Failed to fetch stats');
+                }
+
+                const statsData = await statsResponse.json();
+
+                // Show stats container and update UI
+                statsContainer.style.display = 'block';
+                updateUI(statsData);
+
+                // Hide loading message
+                loadingMessage.style.display = 'none';
+
+                // Load stats container content if not already loaded
+                if (!statsContainer.innerHTML.trim()) {
+                    // Fetch the container content from index.html
+                    const containerResponse = await fetch('index.html');
+                    const containerText = await containerResponse.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(containerText, 'text/html');
+                    const container = doc.querySelector('.container');
+                    statsContainer.innerHTML = container.innerHTML;
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.style.display = 'block';
+                loadingMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 

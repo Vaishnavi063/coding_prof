@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Profile Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="profile-header">
+                <div class="profile-image">
+                    <img src="images/default-avatar.png" alt="Profile Picture">
+                </div>
+                <h1 class="profile-name">Loading...</h1>
+                <p class="profile-username">@username</p>
+                <button class="codelio-btn">Get your Codelio Card</button>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="fas fa-envelope"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fas fa-globe"></i></a>
+                    <a href="#" class="social-icon"><i class="fas fa-clipboard"></i></a>
+                </div>
+                <div class="profile-info">
+                    <p><i class="fas fa-map-marker-alt"></i> India</p>
+                    <p><i class="fas fa-university"></i> MIT Academy of Engineering</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Questions</h3>
+                <h2 class="total-questions">0</h2>
+            </div>
+            <div class="stat-card">
+                <h3>Total Active Days</h3>
+                <h2 class="active-days">0</h2>
+            </div>
+            <div class="stat-card">
+                <h3>Total Contests</h3>
+                <h2 class="total-contests">0</h2>
+            </div>
+        </div>
+
+        <!-- Platform Stats -->
+        <div class="platform-stats">
+            <h3>Platform Statistics</h3>
+            <div class="platform-list">
+                <div class="platform-item leetcode">
+                    <img src="images/leetcode.png" alt="LeetCode">
+                    <span class="platform-name">LeetCode</span>
+                    <span class="platform-count">0</span>
+                </div>
+                <div class="platform-item codechef">
+                    <img src="images/codechef.png" alt="CodeChef">
+                    <span class="platform-name">CodeChef</span>
+                    <span class="platform-count">0</span>
+                </div>
+                <div class="platform-item codeforces">
+                    <img src="images/codeforces.png" alt="CodeForces">
+                    <span class="platform-name">CodeForces</span>
+                    <span class="platform-count">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating Chart -->
+        <div class="rating-section">
+            <h3>Rating Progress</h3>
+            <canvas id="ratingChart"></canvas>
+        </div>
+
+        <!-- Problem Distribution -->
+        <div class="problems-section">
+            <div class="dsa-stats">
+                <h3>DSA Problems</h3>
+                <div class="problem-chart">
+                    <canvas id="dsaChart"></canvas>
+                    <div class="problem-stats">
+                        <div class="stat-item easy">
+                            <span class="label">Easy</span>
+                            <span class="count">0</span>
+                        </div>
+                        <div class="stat-item medium">
+                            <span class="label">Medium</span>
+                            <span class="count">0</span>
+                        </div>
+                        <div class="stat-item hard">
+                            <span class="label">Hard</span>
+                            <span class="count">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contest Rankings -->
+        <div class="rankings-section">
+            <h3>Contest Rankings</h3>
+            <div class="platform-rankings">
+                <div class="ranking-item leetcode">
+                    <h4>LEETCODE</h4>
+                    <div class="rating">0</div>
+                    <div class="max-rating">(max: 0)</div>
+                </div>
+                <div class="ranking-item codechef">
+                    <h4>CODECHEF</h4>
+                    <div class="rating">0</div>
+                    <div class="max-rating">(max: 0)</div>
+                </div>
+                <div class="ranking-item codeforces">
+                    <h4>CODEFORCES</h4>
+                    <div class="rating">0</div>
+                    <div class="max-rating">(max: 0)</div>
+                    <div class="rank">newbie</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic Analysis -->
+        <div class="topic-analysis">
+            <h3>DSA Topic Analysis</h3>
+            <div class="topic-bars" id="topicBars">
+                <!-- Topics will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 
